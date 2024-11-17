@@ -1,0 +1,7 @@
+pyqt5
+opencv-python
+dlib
+numpy
+scikit-learn
+imutils
+opencv-contrib-python
