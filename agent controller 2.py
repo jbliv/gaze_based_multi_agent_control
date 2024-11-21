@@ -93,6 +93,9 @@ class DualWindowController:
         self.root.bind('1', lambda event: self.select_window(0))
         self.root.bind('2', lambda event: self.select_window(1))
         
+        # Center turtle control
+        self.root.bind('b', lambda event: self._center_turtle())
+        
         # Movement key press events
         self.root.bind('<Up>', lambda event: self._start_forward())
         self.root.bind('<Down>', lambda event: self._start_backward())
@@ -105,9 +108,12 @@ class DualWindowController:
         self.root.bind('<KeyRelease-Left>', lambda event: self._stop_left())
         self.root.bind('<KeyRelease-Right>', lambda event: self._stop_right())
         
-        # Speed controls
-        self.root.bind('plus', lambda event: self._increase_speed())
-        self.root.bind('minus', lambda event: self._decrease_speed())
+        # Speed controls - fixed key bindings
+        self.root.bind('<equal>', lambda event: self._increase_speed())  # + key (usually Shift+=)
+        self.root.bind('<minus>', lambda event: self._decrease_speed())  # - key
+        self.root.bind('<plus>', lambda event: self._increase_speed())   # + key on numpad
+        self.root.bind('<KP_Add>', lambda event: self._increase_speed()) # + on numpad (some systems)
+        self.root.bind('<KP_Subtract>', lambda event: self._decrease_speed()) # - on numpad
 
     def _update_movement(self):
         # Update agent positions based on movement flags
@@ -193,14 +199,28 @@ class DualWindowController:
     def _increase_speed(self) -> None:
         if self.selected_window is not None:
             agent = self.agents[self.selected_window]
-            agent.speed = min(agent.speed + 2, 20)
+            agent.speed = min(agent.speed + 1, 20)  # Increases by 2, max of 20
+            # Print speed more visibly
+            print(f"\nWindow {self.selected_window + 1} Speed: {agent.speed}")
             logger.info(f"Speed increased to {agent.speed}")
             
     def _decrease_speed(self) -> None:
         if self.selected_window is not None:
             agent = self.agents[self.selected_window]
-            agent.speed = max(agent.speed - 2, 1)
+            agent.speed = max(agent.speed - 1, 1)  # Decreases by 2, min of 1
+            # Print speed more visibly
+            print(f"\nWindow {self.selected_window + 1} Speed: {agent.speed}")
             logger.info(f"Speed decreased to {agent.speed}")
+
+    def _center_turtle(self) -> None:
+        # Center the selected turtle
+        if self.selected_window is not None:
+            agent = self.agents[self.selected_window]
+            agent.turtle.penup()
+            agent.turtle.home()  # Move to (0,0) and set heading to 0
+            agent.position = (0, 0)
+            agent.heading = 0
+            print(f"\nCentered turtle in Window {self.selected_window + 1}")
 
     def get_agent_positions(self) -> Dict[int, tuple[float, float]]:
         return {id: agent.position for id, agent in self.agents.items()}
@@ -212,6 +232,7 @@ class DualWindowController:
         print("2: Select Right Canvas")
         print("Arrow keys: Move/rotate selected turtle")
         print("+/-: Adjust speed")
+        print("b: Center selected turtle")
         
         # Start the Tkinter main loop
         self.root.mainloop()
