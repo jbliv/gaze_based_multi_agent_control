@@ -1,4 +1,6 @@
 import numpy
+import agent_controller_2
+import gaze2agent
 
 def gaze_location(image):
     location = image
@@ -14,4 +16,13 @@ def control_agent(agent):
 
 if __name__ == "__main__":
     image = None
-    do_stuff = control_agent(agent_from_gaze(gaze_location(image)))
+    # Initialization code, whether that be a calibration sequence or accessing a stored calibration sequence
+    controller = agent_controller_2.DualWindowController()
+    agent1 = controller.agents[0]
+    agent2 = controller.agents[1]
+    agent_selector = gaze2agent.agent_select(agent1, agent2, "position", 60)
+
+    # Loop for standard operations, exit condition tbd
+    running = True
+    while running:
+        pass

@@ -26,7 +26,7 @@ class AgentState:
     turning_left: bool = False
     turning_right: bool = False
     def getPosition(self):
-        return np.array(self.position[0], self.position[1])
+        return np.array([self.position[0], self.position[1]])
 
 class DualWindowController:
     def __init__(self, canvas_width: int = 400, canvas_height: int = 400):
