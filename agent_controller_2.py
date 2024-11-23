@@ -5,6 +5,7 @@ import logging
 from dataclasses import dataclass
 import time
 import threading
+import numpy as np
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -24,6 +25,8 @@ class AgentState:
     moving_backward: bool = False
     turning_left: bool = False
     turning_right: bool = False
+    def getPosition(self):
+        return np.array(self.position[0], self.position[1])
 
 class DualWindowController:
     def __init__(self, canvas_width: int = 400, canvas_height: int = 400):
