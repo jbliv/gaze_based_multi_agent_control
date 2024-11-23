@@ -1,7 +1,3 @@
-pyqt5
-opencv-python
-dlib
-numpy
-scikit-learn
-imutils
-opencv-contrib-python
+opencv-python==4.10.0.84
+dlib==19.24.6
+screeninfo==0.8.1
