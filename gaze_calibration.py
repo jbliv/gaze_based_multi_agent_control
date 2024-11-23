@@ -23,7 +23,7 @@ class GazeOTS:
     def __init__(self) -> None:
         self.cap: VideoCapture = cv2.VideoCapture(0)
         self.detector = dlib.get_frontal_face_detector()
-        self.predictor = dlib.shape_predictor("./assets/shape_predictor_68_face_landmarks.dat")
+        self.predictor = dlib.shape_predictor("./assets/shape_predictor.dat")
 
         screen = screeninfo.get_monitors()[0]
         self.width, self.height = screen.width, screen.height
