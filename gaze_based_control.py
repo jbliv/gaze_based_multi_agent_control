@@ -25,4 +25,4 @@ if __name__ == "__main__":
     # Loop for standard operations, exit condition tbd
     running = True
     while running:
-        pass
+        agent_selector.getAgent() # input is gaze location
