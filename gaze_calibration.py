@@ -36,13 +36,16 @@ class GazeOTS:
             (self.width // 2, self.height // 2)
         ]
     
-    def run(self):
+    def run(self, calibration_file=None):
         """
         ## Run
 
         Runs calibration sequence and creates display with live gaze tracking
         """
-        gaze_points = self.__calibrate()
+        if not calibration_file:
+            gaze_points = self.__calibrate()
+        else: # TODO: parse calibration data from file
+            gaze_points = 0
         self.__track_gaze(gaze_points=gaze_points)
 
     def __calibrate(self) -> Sequence[Tuple[int, int]]:
