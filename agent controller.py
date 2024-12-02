@@ -1,6 +1,6 @@
 import tkinter as tk
 from turtle import RawTurtle, TurtleScreen
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional, Tuple, Callable
 import math
 from dataclasses import dataclass
 
@@ -46,13 +46,23 @@ class SingleWindowController:
         self.rotation_speed = 15
         
         # Add callback storage
-        self.position_callback = None
+        self.position_callback: Optional[Callable[[Dict[int, Tuple[float, float]]], None]] = None
         
         self._initialize_agents()
         self._setup_controls()
         
         self.running = True
         self._update_movement()
+
+    def set_position_callback(self, callback: Callable[[Dict[int, Tuple[float, float]]], None]) -> None:
+        """
+        Set a callback function to receive position updates.
+        The callback function should accept a dictionary of turtle positions.
+        
+        Args:
+            callback: Function that takes a dictionary mapping turtle IDs to (x,y) positions
+        """
+        self.position_callback = callback
 
     def print_canvas_info(self):
         print(f"\nCanvas dimensions: {self.canvas_width}x{self.canvas_height}")
@@ -114,7 +124,7 @@ class SingleWindowController:
     def get_all_positions(self) -> Dict[int, Tuple[float, float]]:
         """Return current positions of all turtles."""
         return {
-            agent_id: agent.position 
+            agent_id: agent.turtle.position()
             for agent_id, agent in self.agents.items()
         }
 
@@ -248,7 +258,7 @@ class SingleWindowController:
     def run(self):
         print("Controls:")
         print("1: Select Red Turtle")
-        print("2: Select Blue Turtle")
+        print("2: Select Green Turtle")
         print("Arrow keys: Move/rotate selected turtle")
         print("+/-: Adjust speed")
         print("d: Print canvas info")
@@ -256,8 +266,17 @@ class SingleWindowController:
         self.root.mainloop()
 
 def main():
-    # Set your desired window size here
+    # Example usage with position tracking
+    def print_positions(positions):
+        print(f"Current positions: {positions}")
+    
+    # Create controller with custom window size
     controller = SingleWindowController(width=1000, height=800)
+    
+    # Set up position tracking
+    controller.set_position_callback(print_positions)
+    
+    # Run the application
     controller.run()
 
 if __name__ == "__main__":
