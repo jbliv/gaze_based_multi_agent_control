@@ -120,4 +120,6 @@ ___
 
 Thank you for viewing our project. The following table lists member contributions, along with the libraries used in each section:
 
-| Member | Section | Libraries: | numpy | 
+| Member | Section | Libraries |
+| :----: | :-----: | :-------: |
+| Lorem Ipsum | Lorem Ipsum | Lorem Ipsum |
