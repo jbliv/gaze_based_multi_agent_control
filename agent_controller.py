@@ -48,7 +48,7 @@ class SingleWindowController:
         
         self.agents: Dict[int, AgentState] = {}
         self.selected_window: Optional[int] = None
-        self.movement_speed = 10
+        self.movement_speed = 20
         self.rotation_speed = 15
         
         self.position_callback: Optional[Callable[[Dict[int, Tuple[float, float]]], None]] = None
@@ -272,11 +272,8 @@ class SingleWindowController:
         self.root.mainloop()
 
 def main():
-    def print_positions(positions):
-        print(f"Current positions: {positions}")
     
     controller = SingleWindowController()
-    controller.set_position_callback(print_positions)
     controller.run()
 
 if __name__ == "__main__":
