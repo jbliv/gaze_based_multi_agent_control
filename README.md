@@ -146,6 +146,7 @@ Libraries used (per file):
 
 File Structure:
 
+```
 ./
 ├── _assets/
 │   ├── calibration_files/      # Cached calibration files
@@ -164,5 +165,5 @@ File Structure:
 ├── makefile
 ├── README.md
 └── requirements.txt            # Python library requirements
-
+```
 ___
