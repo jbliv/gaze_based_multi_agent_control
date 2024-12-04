@@ -120,7 +120,7 @@ ___
 
 Thank you for viewing our project. The following table lists member contributions:
 
-<center>
+<div align="center">
 
 | Member | Section |
 | :----: | :-----: |
@@ -129,12 +129,16 @@ Thank you for viewing our project. The following table lists member contribution
 | Linus Kim | Control of Agents |
 | Quinn Farquharson | Visualization and Interfaces |
 
-</center>
+</div>
 
 Libraries used (per file):
 
+<div align="center">
+
 |                     | opencv | dlib | tkinter | turtle | filterpy | itertools | screeninfo | numpy | threading | typing | dataclass | json | os  | math |
 | :-----------------: | :----: | :--: | :-----: | :----: | :------: | :-------: | :--------: | :---: | :-------: | :----: | :-------: | :--: | :-: | :--: |
-| gaze_calibration.py |<input type="checkbox" checked />|<input type="checkbox" checked />|<input type="checkbox"/>|<input type="checkbox"/>|<input type="checkbox"/>|<input type="checkbox" checked />|<input type="checkbox" checked />|<input type="checkbox" checked />|<input type="checkbox"/>|<input type="checkbox" checked />|<input type="checkbox"/>|<input type="checkbox" checked />|<input type="checkbox" checked />|<input type="checkbox"/>|
-| agent_controller.py |<input type="checkbox"/>|<input type="checkbox" />|<input type="checkbox" checked/>|<input type="checkbox" checked/>|<input type="checkbox"/>|<input type="checkbox"/>|<input type="checkbox" />|<input type="checkbox"/>|<input type="checkbox" checked/>|<input type="checkbox" checked />|<input type="checkbox" checked/>|<input type="checkbox"/>|<input type="checkbox"/>|<input type="checkbox" checked/>|
-| agent_controller.py |<input type="checkbox"/>|<input type="checkbox"/>|<input type="checkbox"/>|<input type="checkbox"/>|<input type="checkbox" checked/>|<input type="checkbox"/>|<input type="checkbox"/>|<input type="checkbox" checked/>|<input type="checkbox"/>|<input type="checkbox" />|<input type="checkbox"/>|<input type="checkbox"/>|<input type="checkbox"/>|<input type="checkbox"/>|
+| gaze_calibration.py |        |      |         |        |          |           |            |       |           |        |           |      |     |      |
+| agent_controller.py |        |      |         |        |          |           |            |       |           |        |           |      |     |      |
+|    gaze2agent.py    |        |      |         |        |          |           |            |       |           |        |           |      |     |      |
+
+</div>
