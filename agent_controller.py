@@ -17,36 +17,44 @@ class AgentState:
     turning_right: bool = False
 
 class SingleWindowController:
-    def __init__(self, width: int = 800, height: int = 600):
+    def __init__(self):
         self.root = tk.Tk()
         self.root.title("Dual Turtle Control")
-        self.root.resizable(False, False)  # Disable resizing
+        
+        # Get screen dimensions
+        self.screen_width = self.root.winfo_screenwidth()
+        self.screen_height = self.root.winfo_screenheight()
+        
+        # Configure root window for fullscreen
+        self.root.attributes('-fullscreen', True)
         
         self.frame = tk.Frame(self.root)
-        self.frame.pack(expand=True, fill='both', padx=5, pady=5)
+        self.frame.pack(expand=True, fill='both')
         
-        # Create canvas with fixed size
-        self.canvas = tk.Canvas(self.frame, width=width, height=height, bg='white')
+        # Create canvas with screen dimensions
+        self.canvas = tk.Canvas(self.frame, width=self.screen_width, height=self.screen_height, bg='white')
         self.canvas.pack(expand=True, fill='both')
         self.screen = TurtleScreen(self.canvas)
         
         # Store canvas dimensions
-        self.canvas_width = width
-        self.canvas_height = height
+        self.canvas_width = self.screen_width
+        self.canvas_height = self.screen_height
         
-        # Set coordinate system
+        # Set coordinate system with (0,0) at top-left
         self.screen.setworldcoordinates(
-            -width/2, -height/2,
-            width/2, height/2
+            0, self.screen_height,  # Make y-axis inverted
+            self.screen_width, 0
         )
         
         self.agents: Dict[int, AgentState] = {}
         self.selected_window: Optional[int] = None
-        self.movement_speed = 10  # Default speed
+        self.movement_speed = 10
         self.rotation_speed = 15
         
-        # Add callback storage
         self.position_callback: Optional[Callable[[Dict[int, Tuple[float, float]]], None]] = None
+        
+        # Add escape key binding for exiting fullscreen
+        self.root.bind('<Escape>', lambda e: self.root.destroy())
         
         self._initialize_agents()
         self._setup_controls()
@@ -55,32 +63,23 @@ class SingleWindowController:
         self._update_movement()
 
     def set_position_callback(self, callback: Callable[[Dict[int, Tuple[float, float]]], None]) -> None:
-        """
-        Set a callback function to receive position updates.
-        The callback function should accept a dictionary of turtle positions.
-        
-        Args:
-            callback: Function that takes a dictionary mapping turtle IDs to (x,y) positions
-        """
+        """Set a callback function to receive position updates."""
         self.position_callback = callback
 
-    def print_canvas_info(self):
-        print(f"\nCanvas dimensions: {self.canvas_width}x{self.canvas_height}")
-        bounds = self._get_bounds()
-        print(f"Coordinate bounds: {bounds}")
-        for agent_id, agent in self.agents.items():
-            print(f"Turtle {agent_id} position: {agent.turtle.position()}")
-
     def _initialize_agents(self) -> None:
+        # Position turtles relative to screen size
+        left_pos = (self.screen_width * 0.25, self.screen_height * 0.5)
+        right_pos = (self.screen_width * 0.75, self.screen_height * 0.5)
+        
         turtle1 = RawTurtle(self.screen)
         turtle1.penup()
         turtle1.shape('turtle')
         turtle1.color('red')
-        turtle1.setpos(-100, 0)
+        turtle1.setpos(*left_pos)
         
         self.agents[0] = AgentState(
             turtle=turtle1,
-            position=(-100, 0),
+            position=left_pos,
             heading=0,
             speed=self.movement_speed
         )
@@ -89,11 +88,11 @@ class SingleWindowController:
         turtle2.penup()
         turtle2.shape('turtle')
         turtle2.color('green')
-        turtle2.setpos(100, 0)
+        turtle2.setpos(*right_pos)
         
         self.agents[1] = AgentState(
             turtle=turtle2,
-            position=(100, 0),
+            position=right_pos,
             heading=0,
             speed=self.movement_speed
         )
@@ -118,7 +117,6 @@ class SingleWindowController:
         self.root.bind('<KP_Add>', lambda event: self._increase_speed())
         self.root.bind('<KP_Subtract>', lambda event: self._decrease_speed())
         
-        # Debug info binding
         self.root.bind('d', lambda event: self.print_canvas_info())
 
     def get_all_positions(self) -> Dict[int, Tuple[float, float]]:
@@ -132,10 +130,10 @@ class SingleWindowController:
         padding = 20
         
         return (
-            -self.canvas_width/2 + padding,   # left boundary
-            self.canvas_width/2 - padding,    # right boundary
-            -self.canvas_height/2 + padding,  # bottom boundary
-            self.canvas_height/2 - padding    # top boundary
+            padding,  
+            self.screen_width - padding,
+            padding, 
+            self.screen_height - padding
         )
 
     def _clamp_position(self, pos: tuple[float, float]) -> tuple[float, float]:
@@ -175,10 +173,10 @@ class SingleWindowController:
                     agent.position = new_pos
                 
                 if agent.turning_left:
-                    agent.turtle.left(self.rotation_speed)
+                    agent.turtle.left(-self.rotation_speed)
                     agent.heading = agent.turtle.heading()
                 if agent.turning_right:
-                    agent.turtle.right(self.rotation_speed)
+                    agent.turtle.right(-self.rotation_speed)
                     agent.heading = agent.turtle.heading()
             
             # Call position callback if set
@@ -210,6 +208,13 @@ class SingleWindowController:
         selected_agent.turtle.color(original_color, 'white')
         
         return True
+
+    def print_canvas_info(self):
+        print(f"\nScreen dimensions: {self.screen_width}x{self.screen_height}")
+        bounds = self._get_bounds()
+        print(f"Coordinate bounds: {bounds}")
+        for agent_id, agent in self.agents.items():
+            print(f"Turtle {agent_id} position: {agent.turtle.position()}")
 
     def _start_forward(self):
         if self.selected_window is not None:
@@ -262,21 +267,16 @@ class SingleWindowController:
         print("Arrow keys: Move/rotate selected turtle")
         print("+/-: Adjust speed")
         print("d: Print canvas info")
+        print("Escape: Exit fullscreen")
         
         self.root.mainloop()
 
 def main():
-    # Example usage with position tracking
     def print_positions(positions):
         print(f"Current positions: {positions}")
     
-    # Create controller with custom window size
-    controller = SingleWindowController(width=1000, height=800)
-    
-    # Set up position tracking
+    controller = SingleWindowController()
     controller.set_position_callback(print_positions)
-    
-    # Run the application
     controller.run()
 
 if __name__ == "__main__":
