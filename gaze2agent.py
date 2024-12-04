@@ -18,15 +18,15 @@ class agent_select:
         elif selection_method == "classifier":
             self.__method = self.classifier
     
-    def position(self) -> AgentState:
+    def position(self) -> int:
         # Simple comparison for closest agent to gaze position
         dist1 = np.linalg.norm(self.gaze_location - self.agent1.position)
         dist2 = np.linalg.norm(self.gaze_location - self.agent2.position)
         if dist1 < dist2:
-            print("Agent 1")
-            return self.agent1
-        print("Agent 2")
-        return self.agent2
+            # print("Agent 1")
+            return 1
+        # print("Agent 2")
+        return 2
     
     def velocity(self) -> AgentState:
         # Calculate vectors from gaze position to agents

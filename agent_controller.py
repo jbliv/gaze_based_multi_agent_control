@@ -55,13 +55,16 @@ class SingleWindowController:
         self.rotation_speed = 15
         
         self.position_callback: Optional[Callable[[Dict[int, Tuple[float, float]]], None]] = None
+
+        self.test_gaze = GazeOTS()
         
         # Add escape key binding for exiting fullscreen
         self.root.bind('<Escape>', lambda e: self.root.destroy())
         
         self._initialize_agents()
         self._setup_controls()
-        
+        self.agent_selector = gaze2agent.agent_select(self.agents[0], self.agents[1], "position", 60)
+
         self.running = True
         self._update_movement()
 
@@ -162,6 +165,8 @@ class SingleWindowController:
         return self._clamp_position((new_x, new_y))
 
     def _update_movement(self):
+        self.select_window(self.agent_selector.getAgent(self.test_gaze.gaze_location) - 1) 
+        
         try:
             if self.selected_window is not None:
                 agent = self.agents[self.selected_window]
@@ -277,12 +282,8 @@ class SingleWindowController:
 def main():
     
     controller = SingleWindowController()
-    controller.set_position_callback(print_positions)
-    test_gaze = GazeOTS()
+    # controller.set_position_callback(print_positions)
     # Initialization code, whether that be a calibration sequence or accessing a stored calibration sequence
-    agent1 = controller.agents[0]
-    agent2 = controller.agents[1]
-    agent_selector = gaze2agent.agent_select(agent1, agent2, "position", 60)
     controller.run()
 
 if __name__ == "__main__":
