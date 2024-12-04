@@ -1,5 +1,6 @@
 from assets.dlib_typing import _dlib_pybind11
-from typing import Sequence, Tuple, Union
+from typing import Sequence, Tuple, Any
+from itertools import combinations
 from screeninfo import Monitor
 from cv2 import VideoCapture
 import numpy as np
@@ -25,7 +26,6 @@ class GazeOTS:
     None
     """
     def __init__(self) -> None:
-        # Webcam and model initialization
         self.cap: VideoCapture = cv2.VideoCapture(0)
 
         self.detector: _dlib_pybind11.fhog_object_detector = dlib.get_frontal_face_detector()
@@ -41,12 +41,15 @@ class GazeOTS:
         self.webcam_width: int = webcam[1].shape[1]
         self.webcam_height: int = webcam[1].shape[0]
 
+        # Calibration dot
+        self.dot_radius = round(max([self.width, self.height]) / 100)
+
         # Top left, top right, bottom left, bottom right, center points on screen (in px)
         self.calibration_points: Sequence[Tuple[int, int]] = [
-            (0, 0), 
-            (self.width - 1, 0), 
-            (0, self.height - 1), 
-            (self.width - 1, self.height - 1), 
+            (self.dot_radius, self.dot_radius), 
+            (self.width - self.dot_radius, self.dot_radius), 
+            (self.dot_radius, self.height - self.dot_radius), 
+            (self.width - self.dot_radius, self.height - self.dot_radius), 
             (self.width // 2, self.height // 2)
         ]
 
@@ -56,7 +59,7 @@ class GazeOTS:
 
         self.run()
     
-    def run(self):
+    def run(self) -> None:
         """
         ## Run
 
@@ -92,7 +95,7 @@ class GazeOTS:
 
         else:
             self.gaze_points = self.__calibrate()
-            self.transform = self.__calculate_transformation_matrix(calibration_points=self.calibration_points, gaze_points=self.gaze_points)
+            self.transform = self.average_trans
             calibration_dict = {
                 "calibration_points": self.calibration_points,
                 "gaze_points": self.gaze_points,
@@ -101,8 +104,6 @@ class GazeOTS:
 
             with open(f"./assets/calibration_files/s{self.width}_s{self.height}_w{self.webcam_width}_w{self.webcam_height}.json", "w") as outfile:
                 json.dump(obj=calibration_dict, fp=outfile)
-
-        # self.__track_gaze()
 
     def __calibrate(self) -> Sequence[Tuple[int, int]]:
         """
@@ -126,13 +127,45 @@ class GazeOTS:
         cv2.namedWindow("Calibration", cv2.WND_PROP_FULLSCREEN)
         cv2.setWindowProperty("Calibration", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 
+        # Calculate scaling for display text (accounts for different display resolutions)
+        line1_text = "Turn your head to stare at each dot for two seconds."
+        line2_text = "Press spacebar to record calibration point."
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        font_scale = 2
+        font_thickness = font_scale * 2
+
+        while True:
+            text_size = cv2.getTextSize(text=line1_text, fontFace=font, fontScale=font_scale, thickness=font_thickness)[0]
+            if self.width > text_size[0] > self.width * 0.75:
+                break
+            elif self.width < text_size[0]:
+                font_scale -= 0.1
+                font_thickness = round(font_scale * 2)
+            elif self.width * 0.75 > text_size[0]:
+                font_scale += 0.1
+                font_thickness = round(font_scale * 2)
+
+        # Set up display text
+        line1_size = cv2.getTextSize(text=line1_text, fontFace=font, fontScale=font_scale, thickness=font_thickness)[0]
+        line2_size = cv2.getTextSize(text=line2_text, fontFace=font, fontScale=font_scale, thickness=font_thickness)[0]
+
+        line1_origin = (round(self.calibration_points[-1][0] - line1_size[0] / 2),
+                        round(self.calibration_points[-1][1] - line1_size[1]))
+        line2_origin = (round(self.calibration_points[-1][0] - line2_size[0] / 2),
+                        round(self.calibration_points[-1][1] + line2_size[1]))
+    
         # Collect points
         gaze_points = []
         for point in self.calibration_points:
             x, y = point
             frame = np.zeros((self.height, self.width, 3))
 
-            cv2.circle(frame, (x, y), 10, (255, 0, 0), -1)
+            cv2.putText(img=frame, text=line1_text, org=line1_origin, fontFace=font, fontScale=font_scale, 
+                        color=(255, 255, 255), thickness=font_thickness, lineType=cv2.FILLED)
+            cv2.putText(img=frame, text=line2_text, org=line2_origin, fontFace=font, fontScale=font_scale, 
+                        color=(255, 255, 255), thickness=font_thickness, lineType=cv2.FILLED)
+            
+            cv2.circle(img=frame, center=(x, y), radius=self.dot_radius, color=(0, 255, 0), thickness=-1)            
             cv2.imshow("Calibration", frame)
 
             # Wait for user to capture image (spacebar)
@@ -165,7 +198,7 @@ class GazeOTS:
         cv2.destroyWindow("Calibration")
         return gaze_points
 
-    def __track_gaze(self) -> None:
+    def track_gaze(self) -> None:
         """
         ## Track Gaze
 
@@ -173,8 +206,11 @@ class GazeOTS:
 
         Parameters
         ----------
-        gaze_points : Sequence[Tuple[int, int]]
-            Known gaze points from calibration sequence
+        None
+
+        Returns
+        -------
+        None
         """
         # Create a black screen
         gaze_screen = np.zeros((self.height, self.width, 3))
@@ -196,11 +232,10 @@ class GazeOTS:
                                                            dtype=np.float32), self.transform)
                 gaze_x, gaze_y = transformed_point[0][0]
             
-            print(gaze_x, gaze_y)
             gaze_screen = np.zeros((self.height, self.width, 3))
 
             # Draw dot at gaze location
-            cv2.circle(gaze_screen, (int(gaze_x), int(gaze_y)), 10, (0, 255, 0), -1)
+            cv2.circle(gaze_screen, (round(gaze_x), round(gaze_y)), self.dot_radius, (0, 255, 0), -1)
 
             # Display gaze screen
             cv2.imshow("Gaze Tracking", gaze_screen)
@@ -210,7 +245,7 @@ class GazeOTS:
 
         cv2.destroyAllWindows()
 
-    def __gaze_location(self, frame: np.ndarray, gray: Sequence, face) -> Tuple[int, int]:
+    def __gaze_location(self, frame: Sequence, gray: Sequence, face: Any) -> Tuple[int, int]:
         """
         ## Gaze Location
 
@@ -218,7 +253,7 @@ class GazeOTS:
 
         Parameters
         ----------
-        frame : np.ndarray
+        frame : Sequence
             Captured frame
         gray : Sequence
             Normalized frame
@@ -237,16 +272,16 @@ class GazeOTS:
         right_eye = landmarks.part(42), landmarks.part(45)
 
         # Center of each eye
-        left_eye_center = ((left_eye[0].x + left_eye[1].x) // 2, (left_eye[0].y + left_eye[1].y) // 2)
-        right_eye_center = ((right_eye[0].x + right_eye[1].x) // 2, (right_eye[0].y + right_eye[1].y) // 2)
+        left_eye_center = (((left_eye[0].x + left_eye[1].x) / 2), ((left_eye[0].y + left_eye[1].y) / 2))
+        right_eye_center = (((right_eye[0].x + right_eye[1].x) / 2), ((right_eye[0].y + right_eye[1].y) / 2))
 
         # Average of centers
-        face_center_x = (left_eye_center[0] + right_eye_center[0]) // 2
-        face_center_y = (left_eye_center[1] + right_eye_center[1]) // 2
+        face_center_x = ((left_eye_center[0] + right_eye_center[0]) / 2)
+        face_center_y = ((left_eye_center[1] + right_eye_center[1]) / 2)
 
         # Map the eye center position to screen space
-        gaze_x = int((face_center_x / frame.shape[1]) * self.width)
-        gaze_y = int((face_center_y / frame.shape[0]) * self.height)
+        gaze_x = round((face_center_x / frame.shape[1]) * self.width)
+        gaze_y = round((face_center_y / frame.shape[0]) * self.height)
 
         return (gaze_x, gaze_y)
 
@@ -254,7 +289,8 @@ class GazeOTS:
         """
         ## Calculate Transformation Matrix
 
-        Creates transformation matrix to map inputs to outputs
+        Creates transformation matrix to map inputs to outputs.
+        Note that inputs must be a matrix of shape 2 x 3.
 
         Parameters
         ----------
@@ -272,7 +308,7 @@ class GazeOTS:
         dst_pts = np.array([list(x) for x in calibration_points], dtype=np.float32)
 
         # Affine transformation matrix
-        matrix = cv2.getAffineTransform(src_pts[0:3], dst_pts[0:3])
+        matrix = cv2.getAffineTransform(src_pts, dst_pts)
         return matrix
 
     @property
@@ -282,14 +318,15 @@ class GazeOTS:
 
         Attribute giving current gaze location
 
+        Parameters
+        ----------
+        None
+
         Returns
         -------
         Tuple[int, int]
             Current gaze location in px
         """
-        # Converts from screen webcam snapshots to screen position
-        transform = self.__calculate_transformation_matrix(calibration_points=self.calibration_points, gaze_points=self.gaze_points)
-
         _, webcam_frame = self.cap.read()
         webcam_frame = cv2.flip(webcam_frame, 1)
 
@@ -299,7 +336,7 @@ class GazeOTS:
 
         for face in faces:
             transformed_point = cv2.transform(np.array([[self.__gaze_location(frame=webcam_frame, gray=gray, face=face)]], \
-                                                        dtype=np.float32), transform)
+                                                        dtype=np.float32), self.transform)
             gaze_x, gaze_y = transformed_point[0][0]
 
         if faces:
@@ -310,7 +347,34 @@ class GazeOTS:
         else:
             return (self.gaze_x, self.gaze_y)
     
+    @property
+    def average_trans(self) -> Sequence:
+        """
+        ## Average Transformation Matrix
+
+        Average transformation matrix for converting from snapshot resolution to display resolution
+
+        Returns
+        -------
+        Sequence
+            Average transformation matrix
+        """
+        # Converts from screen webcam snapshots to screen position
+        calib_comb = list(combinations(iterable=self.calibration_points, r=3))
+        gaze_comb = list(combinations(iterable=self.gaze_points, r=3))
+
+        trans_mats = []
+
+        for i in range(len(calib_comb)):
+            trans_mat = self.__calculate_transformation_matrix(calibration_points=calib_comb[i], gaze_points=gaze_comb[i])
+            trans_mats.append(trans_mat)
+
+        average_trans_mat = sum(trans_mats) / len(trans_mats)
+
+        return average_trans_mat
+    
 if __name__ == "__main__":
     test_gaze = GazeOTS()
+    test_gaze.track_gaze()
     while True:
         print(test_gaze.gaze_location, end="\r")
