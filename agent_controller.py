@@ -6,6 +6,8 @@ from dataclasses import dataclass
 import numpy
 from gaze_calibration import GazeOTS
 import gaze2agent
+import threading
+import time
 
 @dataclass
 class AgentState:
@@ -59,11 +61,15 @@ class SingleWindowController:
         self.test_gaze = GazeOTS()
         
         # Add escape key binding for exiting fullscreen
-        self.root.bind('<Escape>', lambda e: self.root.destroy())
+        self.root.bind('<Escape>', lambda e: self.on_escape())
         
         self._initialize_agents()
         self._setup_controls()
         self.agent_selector = gaze2agent.agent_select(self.agents[0], self.agents[1], "position", 60)
+
+        self.running = True  # Flag to control the background loop
+        self.background_thread = threading.Thread(target=self._background_agent, daemon=True)
+        self.background_thread.start()
 
         self.running = True
         self._update_movement()
@@ -164,9 +170,7 @@ class SingleWindowController:
         
         return self._clamp_position((new_x, new_y))
 
-    def _update_movement(self):
-        self.select_window(self.agent_selector.getAgent(self.test_gaze.gaze_location) - 1) 
-        
+    def _update_movement(self):        
         try:
             if self.selected_window is not None:
                 agent = self.agents[self.selected_window]
@@ -267,6 +271,14 @@ class SingleWindowController:
             agent = self.agents[self.selected_window]
             agent.speed = max(agent.speed - 1, 1)
             print(f"\nTurtle {self.selected_window + 1} Speed: {agent.speed}")
+
+    def _background_agent(self) -> None:
+        while True:
+            self.select_window(self.agent_selector.getAgent(self.test_gaze.gaze_location) - 1) 
+
+    def on_escape(self):
+        self.running = False  # Signal the background thread to stop
+        self.root.destroy()  # Close the tkinter window
 
     def run(self):
         print("Controls:")
