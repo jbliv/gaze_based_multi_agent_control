@@ -73,8 +73,17 @@ class GazeOTS:
         """
         calibration_files = os.listdir("./assets/calibration_files")
         predicted_file = f"s{self.width}_s{self.height}_w{self.webcam_width}_w{self.webcam_height}.json"
-        
+
         if predicted_file in calibration_files:
+            recalibrate = input("Do you want to recalibrate? (y/n): ")
+            while recalibrate != "y" and recalibrate != "n":
+                recalibrate = input("Please only enter y or n: ")
+            if recalibrate == "y":
+                recalibrate = True
+            else:
+                recalibrate = False
+        
+        if predicted_file in calibration_files and not recalibrate:
             with open(f"./assets/calibration_files/{predicted_file}", "r") as infile:
                 calibration_dict = json.load(fp=infile)
 

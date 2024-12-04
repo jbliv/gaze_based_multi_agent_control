@@ -23,6 +23,9 @@ class AgentState:
 
 class SingleWindowController:
     def __init__(self):
+
+        self.test_gaze = GazeOTS()
+
         self.root = tk.Tk()
         self.root.title("Dual Turtle Control")
         
@@ -58,8 +61,6 @@ class SingleWindowController:
         
         self.position_callback: Optional[Callable[[Dict[int, Tuple[float, float]]], None]] = None
 
-        self.test_gaze = GazeOTS()
-        
         # Add escape key binding for exiting fullscreen
         self.root.bind('<Escape>', lambda e: self.on_escape())
         
