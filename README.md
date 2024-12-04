@@ -135,10 +135,10 @@ Libraries used (per file):
 
 <div align="center">
 
-|                     | opencv |  dlib  | tkinter | turtle | filterpy | itertools | screeninfo | numpy | threading | typing | dataclass |  json  |  os   |  math  |
+|                     | opencv |  dlib  | tkinter | turtle | filterpy | itertools | screeninfo | numpy | threading | typing | dataclass |  json  |  OS   |  math  |
 | :-----------------: | :----: | :----: | :-----: | :----: | :------: | :-------: | :--------: | :---: | :-------: | :----: | :-------: | :----: | :---: | :----: |
-| gaze_calibration.py | <input type="checkbox">  | - [ ]  |  - [ ]  | - [ ]  |  - [ ]   |   - [ ]   |   - [ ]    | - [ ] |   - [ ]   | - [ ]  |   - [ ]   | - [ ]  | - [ ] |  - [ ] |
-| agent_controller.py | - [ ]  | - [ ]  |  - [ ]  | - [ ]  |  - [ ]   |   - [ ]   |   - [ ]    | - [ ] |   - [ ]   | - [ ]  |   - [ ]   | - [ ]  | - [ ] |  - [ ] |
+| gaze_calibration.py | <img src="./ico/c.png" height=20px>  | <img src="./ico/c.png" height=20px>  |  <img src="./ico/cb.png" height=20px>  | <img src="./ico/cb.png" height=20px>  |  <img src="./ico/cb.png" height=20px>   |   <img src="./ico/c.png" height=20px>   |   <img src="./ico/c.png" height=20px>    | <img src="./ico/c.png" height=20px> |   <img src="./ico/cb.png" height=20px>   | <img src="./ico/c.png" height=20px>  |   <img src="./ico/cb.png" height=20px>   | <img src="./ico/c.png" height=20px>  | <img src="./ico/c.png" height=20px> |  <img src="./ico/cb.png" height=20px> |
+| agent_controller.py | <img src="./ico/cb.png" height=20px>  | <img src="./ico/cb.png" height=20px>  |  <img src="./ico/c.png" height=20px>  | <img src="./ico/c.png" height=20px>  |  <img src="./ico/cb.png" height=20px>   |   <img src="./ico/cb.png" height=20px>   |   <img src="./ico/cb.png" height=20px>    | <img src="./ico/cb.png" height=20px> |   <img src="./ico/c.png" height=20px>   | <img src="./ico/c.png" height=20px>  |   <img src="./ico/c.png" height=20px>   | <img src="./ico/cb.png" height=20px>  | <img src="./ico/cb.png" height=20px> |  <img src="./ico/c.png" height=20px> |
 |    gaze2agent.py    | - [ ]  | - [ ]  |  - [ ]  | - [ ]  |  - [ ]   |   - [ ]   |   - [ ]    | - [ ] |   - [ ]   | - [ ]  |   - [ ]   | - [ ]  | - [ ] |  - [ ] |
 
 </div>
