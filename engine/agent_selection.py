@@ -1,8 +1,9 @@
-import numpy as np
-from agent_controller import AgentState
-from filterpy.kalman import KalmanFilter
+from engine.agent_state import AgentState
 
-class agent_select:
+import numpy as np
+
+
+class AgentSelect:
     def __init__(self, agent1: AgentState, agent2: AgentState, selection_method="position", hz=60):
         self.agent1 = agent1
         self.agent2 = agent2

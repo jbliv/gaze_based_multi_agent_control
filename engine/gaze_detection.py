@@ -1,4 +1,5 @@
-from assets.dlib_typing import _dlib_pybind11
+from _assets.dlib_typing import _dlib_pybind11
+
 from typing import Sequence, Tuple, Any
 from itertools import combinations
 from screeninfo import Monitor
@@ -29,7 +30,7 @@ class GazeOTS:
         self.cap: VideoCapture = cv2.VideoCapture(0)
 
         self.detector: _dlib_pybind11.fhog_object_detector = dlib.get_frontal_face_detector()
-        self.predictor: _dlib_pybind11.shape_predictor = dlib.shape_predictor("./assets/shape_predictor.dat")
+        self.predictor: _dlib_pybind11.shape_predictor = dlib.shape_predictor("./_assets/shape_predictor.dat")
 
         # Screen properties
         screen: Monitor = screeninfo.get_monitors()[0]
@@ -74,7 +75,7 @@ class GazeOTS:
         None
             Runs method to display gaze tracking
         """
-        calibration_files = os.listdir("./assets/calibration_files")
+        calibration_files = os.listdir("./_assets/calibration_files")
         predicted_file = f"s{self.width}_s{self.height}_w{self.webcam_width}_w{self.webcam_height}.json"
 
         if predicted_file in calibration_files:
@@ -87,7 +88,7 @@ class GazeOTS:
                 recalibrate = False
         
         if predicted_file in calibration_files and not recalibrate:
-            with open(f"./assets/calibration_files/{predicted_file}", "r") as infile:
+            with open(f"./_assets/calibration_files/{predicted_file}", "r") as infile:
                 calibration_dict = json.load(fp=infile)
 
             self.gaze_points = calibration_dict["gaze_points"]
@@ -102,7 +103,7 @@ class GazeOTS:
                 "transform": [[float(x) for x in self.transform[0]], [float(x) for x in self.transform[1]]]
             }
 
-            with open(f"./assets/calibration_files/s{self.width}_s{self.height}_w{self.webcam_width}_w{self.webcam_height}.json", "w") as outfile:
+            with open(f"./_assets/calibration_files/s{self.width}_s{self.height}_w{self.webcam_width}_w{self.webcam_height}.json", "w") as outfile:
                 json.dump(obj=calibration_dict, fp=outfile)
 
     def __calibrate(self) -> Sequence[Tuple[int, int]]:
@@ -189,6 +190,8 @@ class GazeOTS:
                         # Store gaze point
                         gaze_points.append((gaze_x, gaze_y))
                     break
+                
+                frame = np.zeros((self.height, self.width, 3))
 
             # Clear screen
             frame = np.zeros((self.height, self.width, 3))
@@ -364,12 +367,15 @@ class GazeOTS:
         gaze_comb = list(combinations(iterable=self.gaze_points, r=3))
 
         trans_mats = []
+        
+        try:
+            for i in range(len(calib_comb)):
+                trans_mat = self.__calculate_transformation_matrix(calibration_points=calib_comb[i], gaze_points=gaze_comb[i])
+                trans_mats.append(trans_mat)
 
-        for i in range(len(calib_comb)):
-            trans_mat = self.__calculate_transformation_matrix(calibration_points=calib_comb[i], gaze_points=gaze_comb[i])
-            trans_mats.append(trans_mat)
-
-        average_trans_mat = sum(trans_mats) / len(trans_mats)
+            average_trans_mat = sum(trans_mats) / len(trans_mats)
+        except IndexError:
+            raise Exception("Please check your lighting. There was an issue extracting facial features.")
 
         return average_trans_mat
     

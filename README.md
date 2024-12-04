@@ -135,10 +135,34 @@ Libraries used (per file):
 
 <div align="center">
 
-|                     | opencv |  dlib  | tkinter | turtle | filterpy | itertools | screeninfo | numpy | threading | typing | dataclass |  json  |  OS   |  math  |
-| :-----------------: | :----: | :----: | :-----: | :----: | :------: | :-------: | :--------: | :---: | :-------: | :----: | :-------: | :----: | :---: | :----: |
-| gaze_calibration.py | <img src="./ico/c.png" height=20px>  | <img src="./ico/c.png" height=20px>  |  <img src="./ico/cb.png" height=20px>  | <img src="./ico/cb.png" height=20px>  |  <img src="./ico/cb.png" height=20px>   |   <img src="./ico/c.png" height=20px>   |   <img src="./ico/c.png" height=20px>    | <img src="./ico/c.png" height=20px> |   <img src="./ico/cb.png" height=20px>   | <img src="./ico/c.png" height=20px>  |   <img src="./ico/cb.png" height=20px>   | <img src="./ico/c.png" height=20px>  | <img src="./ico/c.png" height=20px> |  <img src="./ico/cb.png" height=20px> |
-| agent_controller.py | <img src="./ico/cb.png" height=20px>  | <img src="./ico/cb.png" height=20px>  |  <img src="./ico/c.png" height=20px>  | <img src="./ico/c.png" height=20px>  |  <img src="./ico/cb.png" height=20px>   |   <img src="./ico/cb.png" height=20px>   |   <img src="./ico/cb.png" height=20px>    | <img src="./ico/cb.png" height=20px> |   <img src="./ico/c.png" height=20px>   | <img src="./ico/c.png" height=20px>  |   <img src="./ico/c.png" height=20px>   | <img src="./ico/cb.png" height=20px>  | <img src="./ico/cb.png" height=20px> |  <img src="./ico/c.png" height=20px> |
-|    gaze2agent.py    | <img src="./ico/cb.png" height=20px>  | <img src="./ico/cb.png" height=20px>  |  <img src="./ico/cb.png" height=20px>  | <img src="./ico/cb.png" height=20px>  |  <img src="./ico/c.png" height=20px>   |   <img src="./ico/cb.png" height=20px>   |   <img src="./ico/cb.png" height=20px>    | <img src="./ico/c.png" height=20px> |   <img src="./ico/cb.png" height=20px>   | <img src="./ico/cb.png" height=20px>  |   <img src="./ico/cb.png" height=20px>   | <img src="./ico/cb.png" height=20px>  | <img src="./ico/cb.png" height=20px> |  <img src="./ico/cb.png" height=20px> |
+|                     | opencv |  dlib  | tkinter | turtle | itertools | screeninfo | numpy | threading | typing | dataclass |  json  |  OS   |
+| :-----------------: | :----: | :----: | :-----: | :----: | :-------: | :--------: | :---: | :-------: | :----: | :-------: | :----: | :----: |
+| ./engine/agent_controller.py |<img src="./_ico/cb.png" height=20px>|<img src="./_ico/cb.png" height=20px>|<img src="./_ico/c.png" height=20px>|<img src="./_ico/c.png" height=20px>|<img src="./_ico/cb.png" height=20px>|<img src="./_ico/cb.png" height=20px>|<img src="./_ico/c.png" height=20px>|<img src="./_ico/c.png" height=20px>|<img src="./_ico/c.png" height=20px>|<img src="./_ico/cb.png" height=20px>|<img src="./_ico/cb.png" height=20px>|<img src="./_ico/cb.png" height=20px>
+| ./engine/agent_selection.py |<img src="./_ico/cb.png" height=20px>|<img src="./_ico/cb.png" height=20px>|<img src="./_ico/cb.png" height=20px>|<img src="./_ico/cb.png" height=20px>|<img src="./_ico/cb.png" height=20px>|<img src="./_ico/cb.png" height=20px>|<img src="./_ico/c.png" height=20px>|<img src="./_ico/cb.png" height=20px>|<img src="./_ico/cb.png" height=20px>|<img src="./_ico/cb.png" height=20px>|<img src="./_ico/cb.png" height=20px>|<img src="./_ico/cb.png" height=20px>
+| ./engine/agent_state.py |<img src="./_ico/cb.png" height=20px>|<img src="./_ico/cb.png" height=20px>|<img src="./_ico/cb.png" height=20px>|<img src="./_ico/c.png" height=20px>|<img src="./_ico/cb.png" height=20px>|<img src="./_ico/cb.png" height=20px>|<img src="./_ico/cb.png" height=20px>|<img src="./_ico/cb.png" height=20px>|<img src="./_ico/c.png" height=20px>|<img src="./_ico/c.png" height=20px>|<img src="./_ico/cb.png" height=20px>|<img src="./_ico/cb.png" height=20px>
+| ./engine/gaze_detection.py |<img src="./_ico/c.png" height=20px>|<img src="./_ico/c.png" height=20px>|<img src="./_ico/cb.png" height=20px>|<img src="./_ico/cb.png" height=20px>|<img src="./_ico/c.png" height=20px>|<img src="./_ico/c.png" height=20px>|<img src="./_ico/c.png" height=20px>|<img src="./_ico/cb.png" height=20px>|<img src="./_ico/c.png" height=20px>|<img src="./_ico/cb.png" height=20px>|<img src="./_ico/c.png" height=20px>|<img src="./_ico/c.png" height=20px>
 
 </div>
+
+File Structure:
+
+./
+├── _assets/
+│   ├── calibration_files/      # Cached calibration files
+│   ├── dlib_typing.py          # Custom typing for dlib library
+│   └── shape_predictor.dat     # Pre-trained Predictor
+├── engine/
+│   ├── agent_controller.py     # Logic for controlling agents
+│   ├── agent_selection.py      # Logic for selecting agents
+│   ├── agent_state.py          # State variable for agents
+│   └── gaze_detection.py       # Logic for deriving gaze from webcam
+├── _ico/
+│   ├── cb.png                  # Unchecked checkbox image
+│   └── c.png                   # Checked checkbox image
+├── .gitignore
+├── main.py
+├── makefile
+├── README.md
+└── requirements.txt            # Python library requirements
+
+___
