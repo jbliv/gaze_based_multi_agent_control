@@ -135,10 +135,10 @@ Libraries used (per file):
 
 <div align="center">
 
-|                     | opencv | dlib | tkinter | turtle | filterpy | itertools | screeninfo | numpy | threading | typing | dataclass | json | os  | math |
-| :-----------------: | :----: | :--: | :-----: | :----: | :------: | :-------: | :--------: | :---: | :-------: | :----: | :-------: | :--: | :-: | :--: |
-| gaze_calibration.py |        |      |         |        |          |           |            |       |           |        |           |      |     |      |
-| agent_controller.py |        |      |         |        |          |           |            |       |           |        |           |      |     |      |
-|    gaze2agent.py    |        |      |         |        |          |           |            |       |           |        |           |      |     |      |
+|                     | opencv |  dlib  | tkinter | turtle | filterpy | itertools | screeninfo | numpy | threading | typing | dataclass |  json  |  os   |  math  |
+| :-----------------: | :----: | :----: | :-----: | :----: | :------: | :-------: | :--------: | :---: | :-------: | :----: | :-------: | :----: | :---: | :----: |
+| gaze_calibration.py | - [ ]  | - [ ]  |  - [ ]  | - [ ]  |  - [ ]   |   - [ ]   |   - [ ]    | - [ ] |   - [ ]   | - [ ]  |   - [ ]   | - [ ]  | - [ ] |  - [ ] |
+| agent_controller.py | - [ ]  | - [ ]  |  - [ ]  | - [ ]  |  - [ ]   |   - [ ]   |   - [ ]    | - [ ] |   - [ ]   | - [ ]  |   - [ ]   | - [ ]  | - [ ] |  - [ ] |
+|    gaze2agent.py    | - [ ]  | - [ ]  |  - [ ]  | - [ ]  |  - [ ]   |   - [ ]   |   - [ ]    | - [ ] |   - [ ]   | - [ ]  |   - [ ]   | - [ ]  | - [ ] |  - [ ] |
 
 </div>
