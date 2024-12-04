@@ -1,4 +1,18 @@
-.PHONY: init gaze
+.PHONY: clean init run
+
+# MacOS
+ifeq ($(shell uname), Darwin)
+    PYTHON   := python3
+    PIP      := pip3
+# Windows
+else ifeq ($(shell uname -p), unknown)
+    PYTHON   := python
+    PIP      := pip
+# Linux Distros
+else
+    PYTHON   := python3
+    PIP      := pip3
+endif
 
 clean:
 	rm -rf ./assets/calibration_files
@@ -10,10 +24,8 @@ init: requirements.txt
 	else \
 		curl -o ./assets/shape_predictor.dat https://raw.githubusercontent.com/GuoQuanhao/68_points/master/shape_predictor_68_face_landmarks.dat; \
 	fi
-	pip install --upgrade pip
-	pip install -r requirements.txt
+	$(PIP) install --upgrade pip
+	$(PIP) install -r requirements.txt
 
-gaze:
-	python3 gaze_calibration.py
-
-run: gaze
+run:
+	$(PYTHON) agent_controller.py
