@@ -118,8 +118,23 @@ Once you've finished having the time of your life controlling these turtles, clo
 ___
 # Notes
 
-Thank you for viewing our project. The following table lists member contributions, along with the libraries used in each section:
+Thank you for viewing our project. The following table lists member contributions:
 
-| Member | Section | Libraries |
-| :----: | :-----: | :-------: |
-| Lorem Ipsum | Lorem Ipsum | Lorem Ipsum |
+<center>
+
+| Member | Section |
+| :----: | :-----: |
+| Robert Horvath | Gaze Detection |
+| John Lyle | Agent Selection |
+| Linus Kim | Control of Agents |
+| Quinn Farquharson | Visualization and Interfaces |
+
+</center>
+
+Libraries used (per file):
+
+|                     | opencv | dlib | tkinter | turtle | filterpy | itertools | screeninfo | numpy | threading | typing | dataclass | json | os  | math |
+| :-----------------: | :----: | :--: | :-----: | :----: | :------: | :-------: | :--------: | :---: | :-------: | :----: | :-------: | :--: | :-: | :--: |
+| gaze_calibration.py |<input type="checkbox" checked />|<input type="checkbox" checked />|<input type="checkbox"/>|<input type="checkbox"/>|<input type="checkbox"/>|<input type="checkbox" checked />|<input type="checkbox" checked />|<input type="checkbox" checked />|<input type="checkbox"/>|<input type="checkbox" checked />|<input type="checkbox"/>|<input type="checkbox" checked />|<input type="checkbox" checked />|<input type="checkbox"/>|
+| agent_controller.py |<input type="checkbox"/>|<input type="checkbox" />|<input type="checkbox" checked/>|<input type="checkbox" checked/>|<input type="checkbox"/>|<input type="checkbox"/>|<input type="checkbox" />|<input type="checkbox"/>|<input type="checkbox" checked/>|<input type="checkbox" checked />|<input type="checkbox" checked/>|<input type="checkbox"/>|<input type="checkbox"/>|<input type="checkbox" checked/>|
+| agent_controller.py |<input type="checkbox"/>|<input type="checkbox"/>|<input type="checkbox"/>|<input type="checkbox"/>|<input type="checkbox" checked/>|<input type="checkbox"/>|<input type="checkbox"/>|<input type="checkbox" checked/>|<input type="checkbox"/>|<input type="checkbox" />|<input type="checkbox"/>|<input type="checkbox"/>|<input type="checkbox"/>|<input type="checkbox"/>|
