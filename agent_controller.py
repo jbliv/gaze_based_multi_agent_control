@@ -209,8 +209,13 @@ class SingleWindowController:
             
         if self.selected_window is not None:
             prev_agent = self.agents[self.selected_window]
-            prev_agent.selected = False
-            prev_agent.turtle.color(prev_agent.turtle.color()[0])
+            if self.selected_window != window_id:
+                prev_agent.selected = False
+                prev_agent.moving_forward = False
+                prev_agent.moving_forward = False
+                prev_agent.turning_left = False
+                prev_agent.turning_right = False
+                prev_agent.turtle.color(prev_agent.turtle.color()[0])
             
         self.selected_window = window_id
         selected_agent = self.agents[window_id]
