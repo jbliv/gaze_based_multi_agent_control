@@ -137,7 +137,7 @@ Libraries used (per file):
 
 |                     | opencv |  dlib  | tkinter | turtle | filterpy | itertools | screeninfo | numpy | threading | typing | dataclass |  json  |  os   |  math  |
 | :-----------------: | :----: | :----: | :-----: | :----: | :------: | :-------: | :--------: | :---: | :-------: | :----: | :-------: | :----: | :---: | :----: |
-| gaze_calibration.py | - [ ]  | - [ ]  |  - [ ]  | - [ ]  |  - [ ]   |   - [ ]   |   - [ ]    | - [ ] |   - [ ]   | - [ ]  |   - [ ]   | - [ ]  | - [ ] |  - [ ] |
+| gaze_calibration.py | <input type="checkbox">  | - [ ]  |  - [ ]  | - [ ]  |  - [ ]   |   - [ ]   |   - [ ]    | - [ ] |   - [ ]   | - [ ]  |   - [ ]   | - [ ]  | - [ ] |  - [ ] |
 | agent_controller.py | - [ ]  | - [ ]  |  - [ ]  | - [ ]  |  - [ ]   |   - [ ]   |   - [ ]    | - [ ] |   - [ ]   | - [ ]  |   - [ ]   | - [ ]  | - [ ] |  - [ ] |
 |    gaze2agent.py    | - [ ]  | - [ ]  |  - [ ]  | - [ ]  |  - [ ]   |   - [ ]   |   - [ ]    | - [ ] |   - [ ]   | - [ ]  |   - [ ]   | - [ ]  | - [ ] |  - [ ] |
 
