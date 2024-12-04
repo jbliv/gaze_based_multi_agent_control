@@ -1,5 +1,6 @@
 import numpy
 import agent_controller
+from gaze_calibration import GazeOTS
 import gaze2agent
 
 
@@ -19,9 +20,9 @@ def control_agent(agent):
 
 
 if __name__ == "__main__":
-    image = None
+    test_gaze = GazeOTS()
     # Initialization code, whether that be a calibration sequence or accessing a stored calibration sequence
-    controller = agent_controller.DualWindowController()
+    controller = agent_controller.SingleWindowController()
     agent1 = controller.agents[0]
     agent2 = controller.agents[1]
     agent_selector = gaze2agent.agent_select(agent1, agent2, "position", 60)
@@ -29,4 +30,4 @@ if __name__ == "__main__":
     # Loop for standard operations, exit condition tbd
     running = True
     while running:
-        agent_selector.getAgent()  # input is gaze location
+        agent_selector.getAgent(test_gaze.gaze_location)  # input is gaze location

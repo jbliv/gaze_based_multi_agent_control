@@ -3,6 +3,9 @@ from turtle import RawTurtle, TurtleScreen
 from typing import Dict, Optional, Tuple, Callable
 import math
 from dataclasses import dataclass
+import numpy
+from gaze_calibration import GazeOTS
+import gaze2agent
 
 @dataclass
 class AgentState:
@@ -274,6 +277,12 @@ class SingleWindowController:
 def main():
     
     controller = SingleWindowController()
+    controller.set_position_callback(print_positions)
+    test_gaze = GazeOTS()
+    # Initialization code, whether that be a calibration sequence or accessing a stored calibration sequence
+    agent1 = controller.agents[0]
+    agent2 = controller.agents[1]
+    agent_selector = gaze2agent.agent_select(agent1, agent2, "position", 60)
     controller.run()
 
 if __name__ == "__main__":

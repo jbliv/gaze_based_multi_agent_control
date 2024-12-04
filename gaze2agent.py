@@ -1,5 +1,5 @@
 import numpy as np
-from agent_controller_2 import AgentState
+from agent_controller import AgentState
 from filterpy.kalman import KalmanFilter
 
 class agent_select:
@@ -20,16 +20,18 @@ class agent_select:
     
     def position(self) -> AgentState:
         # Simple comparison for closest agent to gaze position
-        dist1 = np.linalg.norm(self.gaze_location - self.agent1.getPosition())
-        dist2 = np.linalg.norm(self.gaze_location - self.agent2.getPosition())
+        dist1 = np.linalg.norm(self.gaze_location - self.agent1.position)
+        dist2 = np.linalg.norm(self.gaze_location - self.agent2.position)
         if dist1 < dist2:
+            print("Agent 1")
             return self.agent1
+        print("Agent 2")
         return self.agent2
     
     def velocity(self) -> AgentState:
         # Calculate vectors from gaze position to agents
-        agent1_vec = self.agent1.getPosition() - self.gaze_location
-        agent2_vec = self.agent2.getPosition() - self.gaze_location
+        agent1_vec = self.agent1.position - self.gaze_location
+        agent2_vec = self.agent2.position - self.gaze_location
         # Calculate angle between gaze velocity and gaze -> agent
         if np.linalg.norm(self.gaze_velocity) < self.__velo_cutoff:
             return self.position()
