@@ -36,7 +36,7 @@ class SingleWindowController:
         
         # Add instructions text with larger font
         self.instructions = tk.Text(self.instructions_frame, wrap=tk.WORD, 
-                                  font=('Arial', 20), bg='lightgray',
+                                  font=('Arial', 24), bg='lightgray',
                                   relief='flat', padx=10, pady=0)
         self.instructions.pack(expand=True, fill='both')
         
