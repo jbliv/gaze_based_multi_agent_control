@@ -10,7 +10,6 @@ import threading
 
 class SingleWindowController:
     def __init__(self) -> None:
-
         self.test_gaze = GazeOTS()
 
         self.root = tk.Tk()
@@ -23,12 +22,34 @@ class SingleWindowController:
         # Configure root window for fullscreen
         self.root.attributes('-fullscreen', True)
         
+        # Create main frame
         self.frame = tk.Frame(self.root)
         self.frame.pack(expand=True, fill='both')
         
-        # Create canvas with screen dimensions
+        # Create canvas first
         self.canvas = tk.Canvas(self.frame, width=self.screen_width, height=self.screen_height, bg='white')
         self.canvas.pack(expand=True, fill='both')
+        
+        # Create instructions frame and place it on top of the canvas
+        self.instructions_frame = tk.Frame(self.frame, bg='lightgray', bd=2, relief='solid')
+        self.instructions_frame.place(in_=self.canvas, relx=0.7, rely=0.02, relwidth=0.28, relheight=0.2)
+        
+        # Add instructions text with larger font
+        self.instructions = tk.Text(self.instructions_frame, wrap=tk.WORD, 
+                                  font=('Arial', 20), bg='lightgray',
+                                  relief='flat', padx=10, pady=0)
+        self.instructions.pack(expand=True, fill='both')
+        
+        instructions_text = """
+Arrow keys: Move/rotate selected turtle
++/-: Adjust speed
+d: Print canvas info
+Escape: Exit fullscreen"""
+        
+        self.instructions.insert(tk.END, instructions_text)
+        self.instructions.config(state='disabled')
+        
+        # Initialize turtle screen
         self.screen = TurtleScreen(self.canvas)
         
         # Store canvas dimensions
@@ -37,7 +58,7 @@ class SingleWindowController:
         
         # Set coordinate system with (0,0) at top-left
         self.screen.setworldcoordinates(
-            0, self.screen_height,  # Make y-axis inverted
+            0, self.screen_height,
             self.screen_width, 0
         )
         
@@ -55,7 +76,7 @@ class SingleWindowController:
         self._setup_controls()
         self.agent_selector = AgentSelect(self.agents[0], self.agents[1], "position", 60)
 
-        self.running = True  # Flag to control the background loop
+        self.running = True
         self.background_thread = threading.Thread(target=self._background_agent, daemon=True)
         self.background_thread.start()
 
@@ -71,10 +92,12 @@ class SingleWindowController:
         left_pos = (self.screen_width * 0.25, self.screen_height * 0.5)
         right_pos = (self.screen_width * 0.75, self.screen_height * 0.5)
         
+        # Create and configure first turtle
         turtle1 = RawTurtle(self.screen)
         turtle1.penup()
         turtle1.shape('turtle')
         turtle1.color('red')
+        turtle1.shapesize(3, 3)  # Make turtle 3 times larger
         turtle1.setpos(*left_pos)
         
         self.agents[0] = AgentState(
@@ -84,10 +107,12 @@ class SingleWindowController:
             speed=self.movement_speed
         )
         
+        # Create and configure second turtle
         turtle2 = RawTurtle(self.screen)
         turtle2.penup()
         turtle2.shape('turtle')
         turtle2.color('green')
+        turtle2.shapesize(3, 3)  # Make turtle 3 times larger
         turtle2.setpos(*right_pos)
         
         self.agents[1] = AgentState(
@@ -200,7 +225,7 @@ class SingleWindowController:
             if self.selected_window != window_id:
                 prev_agent.selected = False
                 prev_agent.moving_forward = False
-                prev_agent.moving_forward = False
+                prev_agent.moving_backward = False
                 prev_agent.turning_left = False
                 prev_agent.turning_right = False
                 prev_agent.turtle.color(prev_agent.turtle.color()[0])
@@ -266,29 +291,18 @@ class SingleWindowController:
             print(f"\nTurtle {self.selected_window + 1} Speed: {agent.speed}")
 
     def _background_agent(self) -> None:
-        while True:
-            self.select_window(self.agent_selector.getAgent(self.test_gaze.gaze_location) - 1) 
+        while self.running:
+            self.select_window(self.agent_selector.getAgent(self.test_gaze.gaze_location) - 1)
 
     def on_escape(self):
         self.running = False  # Signal the background thread to stop
         self.root.destroy()  # Close the tkinter window
 
     def run(self):
-        print("Controls:")
-        print("1: Select Red Turtle")
-        print("2: Select Green Turtle")
-        print("Arrow keys: Move/rotate selected turtle")
-        print("+/-: Adjust speed")
-        print("d: Print canvas info")
-        print("Escape: Exit fullscreen")
-        
         self.root.mainloop()
 
 def main():
-    
     controller = SingleWindowController()
-    
-    # Initialization code, whether that be a calibration sequence or accessing a stored calibration sequence
     controller.run()
 
 if __name__ == "__main__":
