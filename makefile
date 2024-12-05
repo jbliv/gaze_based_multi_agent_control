@@ -24,7 +24,7 @@ init: requirements.txt
 	else \
 		curl -o ./_assets/shape_predictor.dat https://raw.githubusercontent.com/GuoQuanhao/68_points/master/shape_predictor_68_face_landmarks.dat; \
 	fi
-	$(PIP) install --upgrade pip
+	# $(PIP) install --upgrade pip
 	$(PIP) install -r requirements.txt
 
 run:

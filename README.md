@@ -6,9 +6,13 @@ https://drive.google.com/drive/folders/1f8mSNdhSVFFl2Ep0L37_HpIXJZCJ7ErK?usp=sha
 
 ___
 
-# Usage Guide
+### Dependencies (terminal):
 
-### Dependencies:
+You'll need a unix terminal to execute the necessary commands. MacOS and Linux have this by default, typically called "terminal". If you're using Windows, install [git bash](https://git-scm.com/downloads/win).
+
+___
+
+### Dependencies (make):
 
 This project utilizes [make](https://www.gnu.org/software/make/) to simplify the setup and execution of our project. MacOS and Linux distros typically come with this preinstalled, but Windows does not. The following section details how to install make on each OS, in the event that it isn't installed.
 
@@ -21,11 +25,35 @@ make --version
 If this runs without error, skip past this section. If you receive an error, install make using the steps below:
 
 ##### Windows
-1. Click the following link, which downloades make from GnuWin32
+1. Click the following link, which downloads make from GnuWin32
 
     [make download](https://sourceforge.net/projects/gnuwin32/files/make/3.81/make-3.81.exe/download?use_mirror=psychz&download=)
 
-2. Run the downloaded .exe, following the installation prompts
+2. Run the downloaded .exe, following the installation prompts. Make sure to leave the default install paths.
+
+3. Go to Windows search and access "Edit the system environment variables".
+
+    <center>
+        <img src="./_ico/edit_env_var.png" width="50%">
+    </center>
+
+4. Select "Environment Variables"
+
+    <center>
+        <img src="./_ico/env_var.png" width="75%">
+    </center>
+
+5. Edit Path
+
+    <center>
+        <img src="./_ico/edit_path.png" width="75%">
+    </center>
+
+6. Add the following path
+
+    <center>
+        <img src="./_ico/path.png" width="75%">
+    </center>
 
 ##### MacOS
 1. Install homebrew by running the following command in terminal:
@@ -58,9 +86,61 @@ Assuming you already have [Python](https://www.python.org/downloads/) installed,
 
 ___
 
+### Dependencies (cmake):
+
+cmake is not standard on Unix systems, so we'll need to install it for MacOS, Linux, and Windows.
+
+##### Windows
+
+1. Open git bash and run the following command *(This assumes you're on Windows 10 or later)*:
+
+    ```shell
+    winget install cmake
+    ```
+
+##### MacOS
+1. If you haven't already, install homebrew by running the following command in terminal:
+    
+    ```shell
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    ```
+
+2. Install cmake by running the following command in terminal:
+
+    ```shell
+    brew install cmake
+    ```
+
+##### Linux (Debian-based distros)
+1. Run the following command in terminal
+
+    ```shell
+    sudo apt update && sudo apt install cmake
+    ```
+
+##### Linux (Arch)
+1. Run the following command in terminal
+
+    ```shell
+    sudo pacman -Su cmake
+    ```
+___
+
 ### Initializing the Project
 
-1. **(OPTIONAL)** Create and activate a virtual environment in "./duck_typing" to contain the necessary Python libraries. We won't explain the setup for this, as users who prefer virtual environments already know the process.
+1. **(OPTIONAL)** Create and activate a virtual environment in "./duck_typing" to contain the necessary Python libraries.
+    
+    - MacOS or Linux
+    ```shell
+    python3 -m venv .venv
+    source .venv/bin/activate
+    ```
+
+    - Windows:
+    ```shell
+    python -m venv .venv
+    source .venv/Scripts/activate
+    ```
 
 2. Open a terminal directed at "./duck_typing"
 

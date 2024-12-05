@@ -27,10 +27,11 @@ class GazeOTS:
     None
     """
     def __init__(self) -> None:
+        self.cwd = os.getcwd()
         self.cap: VideoCapture = cv2.VideoCapture(0)
 
         self.detector: _dlib_pybind11.fhog_object_detector = dlib.get_frontal_face_detector()
-        self.predictor: _dlib_pybind11.shape_predictor = dlib.shape_predictor("./_assets/shape_predictor.dat")
+        self.predictor: _dlib_pybind11.shape_predictor = dlib.shape_predictor(os.path.join(self.cwd, '_assets/shape_predictor.dat'))
 
         # Screen properties
         screen: Monitor = screeninfo.get_monitors()[0]
@@ -75,7 +76,7 @@ class GazeOTS:
         None
             Runs method to display gaze tracking
         """
-        calibration_files = os.listdir("./_assets/calibration_files")
+        calibration_files = os.listdir(os.path.join(self.cwd, '_assets/calibration_files'))
         predicted_file = f"s{self.width}_s{self.height}_w{self.webcam_width}_w{self.webcam_height}.json"
 
         if predicted_file in calibration_files:
@@ -88,7 +89,7 @@ class GazeOTS:
                 recalibrate = False
         
         if predicted_file in calibration_files and not recalibrate:
-            with open(f"./_assets/calibration_files/{predicted_file}", "r") as infile:
+            with open(f"{os.path.join(self.cwd, '_assets/calibration_files/')}{predicted_file}", "r") as infile:
                 calibration_dict = json.load(fp=infile)
 
             self.gaze_points = calibration_dict["gaze_points"]
@@ -103,7 +104,7 @@ class GazeOTS:
                 "transform": [[float(x) for x in self.transform[0]], [float(x) for x in self.transform[1]]]
             }
 
-            with open(f"./_assets/calibration_files/s{self.width}_s{self.height}_w{self.webcam_width}_w{self.webcam_height}.json", "w") as outfile:
+            with open(f"{os.path.join(self.cwd, '_assets/calibration_files/')}s{self.width}_s{self.height}_w{self.webcam_width}_w{self.webcam_height}.json", "w") as outfile:
                 json.dump(obj=calibration_dict, fp=outfile)
 
     def __calibrate(self) -> Sequence[Tuple[int, int]]:
