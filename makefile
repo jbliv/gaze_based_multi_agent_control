@@ -19,7 +19,6 @@ clean:
 	mkdir ./_assets/calibration_files
 
 init: requirements.txt
-	mkdir ./_assets/calibration_files
 	@if [ -f ./_assets/shape_predictor.dat ]; then \
 		echo "File exists. Skipping download."; \
 	else \
