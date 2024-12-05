@@ -1,4 +1,5 @@
 opencv-python==4.10.0.84
+cmake
 dlib==19.24.6
 screeninfo==0.8.1
 filterpy==1.4.5
