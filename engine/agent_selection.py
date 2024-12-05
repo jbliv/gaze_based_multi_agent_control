@@ -106,7 +106,6 @@ class AgentSelect:
             self.last_time = current_time
             vx, vy = self.kf.x[1], self.kf.x[3]
             self.gaze_velocity = np.array([vx, vy])
-            print(self.gaze_velocity)
         self.gaze_location = np.array([gaze_location[0], gaze_location[1]])
 
         return self.__method()
