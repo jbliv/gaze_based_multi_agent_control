@@ -38,7 +38,7 @@ class SingleWindowController:
             self.frame, bg="lightgray", bd=2, relief="solid"
         )
         self.instructions_frame.place(
-            in_=self.canvas, relx=0.7, rely=0.02, relwidth=0.28, relheight=0.2
+            in_=self.canvas, relx=0.7, rely=0.02, relwidth=0.28, relheight=0.25
         )
 
         # Add instructions text with larger font
