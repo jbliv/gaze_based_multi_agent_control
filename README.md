@@ -2,7 +2,7 @@ ___
 # Duck Typing ME 396P Project Repo
 
 ### Drive for presentation files
-[Google Slides](https://docs.google.com/presentation/d/1IwQn3CiX4vNH62oOHMN-MBNEar08FHf94JwIBIe-q-0/edit#slide=id.p4)
+[Google Slides](https://docs.google.com/presentation/d/1-6aI2oCmrYU_MY3KASPF4lLQLkJpvj0tCdggImcm7Og/edit?usp=sharing)
 ___
 
 ### Dependencies (terminal):
